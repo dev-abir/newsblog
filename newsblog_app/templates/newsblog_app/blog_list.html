@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+<!-- title -->
+{% block title %}Blogs{% endblock title %}
+<!-- end title -->
+
+{% block content %}
+
+{% include 'partials/_blog_list.html' with blog_list=blog_list %}
+
+{% endblock content %}

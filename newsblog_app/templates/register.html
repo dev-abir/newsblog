@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+<!-- title -->
+{% block title %}Register user{% endblock title %}
+<!-- end title -->
+
+{% block content %}
+
+<!-- load crispy -->
+{% load crispy_forms_tags %}
+<!-- end load crispy -->
+
+<!-- blog form -->
+{% crispy form %}
+<!-- end blog form -->
+
+{% endblock content %}

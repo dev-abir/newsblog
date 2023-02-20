@@ -1,0 +1,40 @@
+<!-- news gallery -->
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem">
+  {% for news in news_list %}
+
+  <!-- news card -->
+  <div class="card" style="width: 18rem">
+    <img
+      src="{{ news.urlToImage }}"
+      class="card-img-top"
+      style="width: 18rem"
+      alt="{{ news.title }} image"
+    />
+    <div class="card-body" style="display: flex; flex-direction: column">
+      <h5 class="card-title">{{ news.title }}</h5>
+      <p class="card-text">
+        {{ news.description | truncatewords:15 | slice:"-4" }}...
+      </p>
+      <a
+        href="{{ news.url }}"
+        target="_blank"
+        class="btn btn-primary"
+        style="margin-top: auto"
+        >Read more &rarr;</a
+      >
+    </div>
+  </div>
+  <!-- end news card -->
+
+  {% empty %}
+
+  <h4>No news!</h4>
+
+  {% endfor %}
+</div>
+<!-- end news gallery -->
+
+<!-- <script>
+  const a = {{ news_list | safe }}
+  console.log(a);
+</script -->

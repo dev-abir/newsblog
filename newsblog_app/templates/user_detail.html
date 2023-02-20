@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+<!-- title -->
+{% block title %}{{ user.username }}{% endblock title %}
+<!-- end title -->
+
+{% block content %}
+
+<!-- user details -->
+
+<table class="table m-auto" style="width: fit-content">
+  <tr>
+    <td><b>Username: </b></td>
+    <td>{{ user.username }}</td>
+  </tr>
+  <tr>
+    <td><b>First name: </b></td>
+    <td>{{ user.first_name }}</td>
+  </tr>
+  <tr>
+    <td><b>Last name: </b></td>
+    <td>{{ user.last_name }}</td>
+  </tr>
+  <tr>
+    <td><b>E-mail: </b></td>
+    <td>{{ user.email }}</td>
+  </tr>
+</table>
+<!-- end user details -->
+
+{% endblock content %}

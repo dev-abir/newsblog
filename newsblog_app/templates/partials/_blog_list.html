@@ -1,0 +1,125 @@
+<!-- blogs gallery -->
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem">
+  {% for blog in blog_list %}
+
+  <!-- delete confirmation modal -->
+  <div
+    class="modal fade"
+    id="deleteModal-{{ blog.slug }}"
+    tabindex="-1"
+    aria-labelledby="deleteModalLabel-{{ blog.slug }}"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="deleteModalLabel-{{ blog.slug }}">
+            Confirmation
+          </h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          You are about to delete the blog <b>"{{ blog.title }}"</b>. Are you
+          sure?
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            NO
+          </button>
+          <form action="{% url 'blog-delete' blog.slug %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">YES!</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end delete confirmation modal -->
+
+  <!-- blog card -->
+  <div class="card" style="width: 18rem">
+    <div class="card-body">
+      <h5 class="card-title">{{ blog.title }}</h5>
+      <h6 class="card-subtitle mb-2 text-muted">
+        {{ blog.author }} | {{ blog.created_on }}
+      </h6>
+      <p class="card-text">
+        {{ blog.content | striptags | truncatewords:3 | slice:"-4" }}...
+      </p>
+      <div style="display: flex; gap: 0.5rem">
+        <a
+          href="{% url 'blog-detail' blog.slug  %}"
+          target="_blank"
+          class="btn btn-primary w-100"
+          title="Read more"
+          >Read more &rarr;</a
+        >
+        <a
+          href="{% url 'blog-update' blog.slug %}"
+          target="_blank"
+          class="btn btn-info"
+          title="Edit"
+        >
+          <div class="fa fa-edit"></div>
+        </a>
+        <button
+          type="button"
+          class="btn btn-danger"
+          data-bs-toggle="modal"
+          data-bs-target="#deleteModal-{{ blog.slug }}"
+          title="Delete"
+        >
+          <div class="fa fa-trash"></div>
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- end blog card -->
+
+  {% empty %}
+
+  <h4>
+    You have no blogs!
+    <a href="{% url 'blog-create' %}"> Create </a>
+    one?
+  </h4>
+
+  {% endfor %}
+</div>
+<!-- end blogs gallery -->
+
+<a
+  href="{% url 'blog-create' %}"
+  class="btn btn-lg btn-outline-primary align-self-center"
+>
+  Add more blogs +
+</a>
+
+{% csrf_token %}
+
+<script>
+  // scroll to bottom to show add more blogs button
+  window.onload = () => window.scrollTo(0, document.body.scrollHeight);
+
+  //   Buggy (using alternate approach)
+  //   function deleteBlog(e) {
+  //     const blogTitle = e.target.dataset.blogTitle;
+  //     const blogDelURL = e.target.getAttribute("data-blog-delete-url");
+
+  //     console.log(blogTitle);
+
+  //     document.getElementById(
+  //       "deleteModalBody"
+  //     ).innerText = `You are about to delete the blog ${blogTitle} Are you sure?`;
+  //     document.getElementById("deleteModalForm").action = blogDelURL;
+  //   }
+</script>

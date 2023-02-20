@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+<!-- title -->
+{% block title %}{{ blog.title }}{% endblock title %}
+<!-- end title -->
+
+{% block content %}
+
+<!-- blog details -->
+
+<h1>{{ blog.title }}</h1>
+<h6 class="card-subtitle mb-2 text-muted">
+  {{ blog.author }} | {{ blog.created_on }}
+</h6>
+<p>{{ blog.content|safe }}</p>
+
+<!-- end blog details -->
+
+{% endblock content %}

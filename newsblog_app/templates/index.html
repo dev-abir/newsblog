@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+<!-- title -->
+{% block title %}Home page{% endblock title %}
+<!-- end title -->
+
+{% block content %}
+
+<!-- news -->
+<h2>News</h2>
+{% include 'partials/_news_list.html' with news_list=news_list %}
+<!-- end news -->
+
+<!-- blogs -->
+<h2>Blogs</h2>
+{% include 'partials/_blog_list.html' with blog_list=blog_list %}
+<!-- end blogs -->
+
+{% endblock content %}
