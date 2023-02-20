@@ -13,6 +13,8 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from rest_framework import viewsets
 from rest_framework.permissions import IsAdminUser
+import requests
+from decouple import config
 
 
 from .models import Blog
@@ -20,17 +22,26 @@ from .forms import UserCreateForm
 from .serializers import BlogSerializer
 
 
+# for cache
+articles = []
+
+
 @login_required
 def index(request):
-    import requests
+    # use cache
+    global articles
+    # TODO: NOTE: (render spins down after certain time,
+    # so no need to handle cache refresh for now)
+    if not articles:
+        API_KEY = config("NEWS_API_KEY")
+        r = requests.get(
+            f"https://newsapi.org/v2/top-headlines?country=us&apiKey={API_KEY}&pageSize=8"
+        )
 
-    API_KEY = "77536e897702419686a7896a245cfaa5"
-    r = requests.get(
-        f"https://newsapi.org/v2/top-headlines?country=us&apiKey={API_KEY}&pageSize=8"
-    )
+        # TODO: chk status code
+        print("stts", r.status_code)
 
-    # TODO: chk status code
-    print("stts", r.status_code)
+        articles = r.json()["articles"]
 
     blogs = Blog.objects.filter(author=request.user).order_by("-created_on")
     if request.user.is_superuser:
@@ -42,7 +53,7 @@ def index(request):
     return render(
         request=request,
         template_name="index.html",
-        context={"blog_list": blogs, "news_list": r.json()["articles"]},
+        context={"blog_list": blogs, "news_list": articles},
     )
 
 
@@ -129,7 +140,7 @@ class BlogCreateView(LoginRequiredMixin, generic.CreateView):
         # append author, slug and save
         self.object = form.save(commit=False)
         self.object.author = self.request.user
-        # TODO: check if starts with "add" or "delete"
+        # TODO: check if starts with "add", because there's a URL "blogs/add"
         self.object.slug = slugify(self.object.title)
         self.object.save()
         return super().form_valid(form)
@@ -153,7 +164,7 @@ class BlogUpdateView(LoginRequiredMixin, PermissionRequiredMixin, generic.Update
     def form_valid(self, form):
         # append author, slug and save
         self.object = form.save(commit=False)
-        # TODO: check if starts with "add" or "delete"
+        # TODO: check if starts with "add", because there's a URL "blogs/add"
         self.object.slug = slugify(self.object.title)
         self.object.save()
         return super().form_valid(form)
