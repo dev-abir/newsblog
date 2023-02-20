@@ -10,8 +10,10 @@
 {% load crispy_forms_tags %}
 <!-- end load crispy -->
 
-<!-- blog form -->
+<!-- register form -->
 {% crispy form %}
-<!-- end blog form -->
+
+<p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+<!-- end register form -->
 
 {% endblock content %}

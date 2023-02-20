@@ -32,17 +32,17 @@ def index(request):
     # TODO: chk status code
     print("stts", r.status_code)
 
+    blogs = Blog.objects.filter(author=request.user).order_by("-created_on")
+    if request.user.is_superuser:
+        # show all blogs for the admin
+        blogs = Blog.objects.order_by("-created_on")
+
     # .json().articles can work as list of dictionary itself...
 
     return render(
         request=request,
         template_name="index.html",
-        context={
-            "blog_list": Blog.objects.filter(author=request.user).order_by(
-                "-created_on"
-            ),
-            "news_list": r.json()["articles"],
-        },
+        context={"blog_list": blogs, "news_list": r.json()["articles"]},
     )
 
 
@@ -93,6 +93,10 @@ class UserDetailView(LoginRequiredMixin, generic.DetailView):
 #################################################################
 class BlogListView(LoginRequiredMixin, generic.ListView):
     def get_queryset(self):
+        if self.request.user.is_superuser:
+            # show all blogs for the admin
+            return Blog.objects.order_by("-created_on")
+
         return Blog.objects.filter(author=self.request.user).order_by("-created_on")
 
 

@@ -30,3 +30,6 @@ class Blog(models.Model):
 
     def can_delete(self, user):
         return self.author == user
+
+    def __str__(self) -> str:
+        return self.title
